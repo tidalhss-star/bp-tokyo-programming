@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="bpaas-design-system" content="editorial-apple">
+    <meta name="bpaas-design-theme" content="kr-noir-gold">
+    <title>비교 | 자동완성 알고리즘 비교 분석 — 4-에이전트 루프 자동화 프로그램 코딩 스쿨</title>
+    <meta name="description" content="자동완성 알고리즘 비교 분석: 트라이(Trie) 기반 vs. 머신러닝 기반 vs. 하이브리드 접근법까지. 4-에이전트 루프가 어떻게 최적의 자동완성 경험을 설계하는지, 진짜 사용자 데이터로 검증한 인사이트를 확인하세요.">
+    <meta name="keywords" content="자동완성 알고리즘 비교 분석, 자동완성 테스트 키워드, 자동완성 기능 최적화 방법, 자동완성 사용자 경험 개선 팁, 4-에이전트 루프, 무인 마케팅 스쿨, BPaaS, SaaS 오토파일럿">
+    <link rel="canonical" href="https://program-school.online/compare">
+    <meta property="og:title" content="자동완성 알고리즘 비교 분석 — 4-에이전트 루프 자동화 프로그램 코딩 스쿨">
+    <meta property="og:description" content="트라이 vs. 머신러닝 vs. 하이브리드: 당신의 SaaS에 맞는 자동완성 알고리즘은? 4-에이전트 루프가 알려주는 실전 비교 가이드.">
+    <meta property="og:url" content="https://program-school.online/compare">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="ko_KR">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="자동완성 알고리즘 비교 분석 — 4-에이전트 루프 자동화 프로그램 코딩 스쿨">
+    <meta name="twitter:description" content="실전에서 검증된 자동완성 알고리즘 비교. 4-에이전트 루프가 설계하는 무인 마케팅 자동화의 핵심.">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #1a1a1a;
+            --text-primary: #f5f0eb;
+            --text-secondary: #b0a89e;
+            --text-muted: #6b645b;
+            --accent-gold: #c8a45c;
+            --accent-gold-light: #e0c87c;
+            --accent-gold-dark: #8b6d2f;
+            --border-subtle: rgba(200, 164, 92, 0.15);
+            --border-muted: rgba(255, 255, 255, 0.06);
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
+            --shadow-gold: 0 0 40px rgba(200, 164, 92, 0.08);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --font-serif: 'Iropke Batang', 'Noto Serif KR', 'Nanum Myeongjo', 'Apple SD Gothic Neo', serif;
+            --font-sans: 'Pretendard', 'Inter', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
+            --transition-smooth: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --max-width: 1100px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.75;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Cinematic gradient overlay — hero background */
+        .hero-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(200, 164, 92, 0.06) 0%, transparent 55%),
+                        radial-gradient(ellipse at 70% 70%, rgba(180, 140, 60, 0.04) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 50%, rgba(10, 10, 10, 0.9) 0%, #0a0a0a 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content-gradient-light {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 50% 0%, rgba(200, 164, 92, 0.04) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: var(--font-serif);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+            line-height: 1.25;
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            line-height: 1.35;
+            margin-top: 2.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        h3 {
+            font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+            line-height: 1.4;
+            margin-top: 1.8rem;
+            margin-bottom: 0.8rem;
+            color: var(--accent-gold-light);
+        }
+
+        p {
+            font-family: var(--font-sans);
+            font-size: 1.05rem;
+            line-height: 1.85;
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+        }
+
+        a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            transition: color var(--transition-smooth), border-color var(--transition-smooth);
+            border-bottom: 1px solid transparent;
+        }
+
+        a:hover {
+            color: var(--accent-gold-light);
+            border-bottom-color: var(--accent-gold-light);
+        }
+
+        /* Drop cap for editorial feel */
+        .drop-cap::first-letter {
+            float: left;
+            font-family: var(--font-serif);
+            font-size: 3.8rem;
+            line-height: 0.85;
+            padding-right: 0.5rem;
+            padding-top: 0.1rem;
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        /* Layout */
+        .site-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation */
+        .nav-present {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-muted);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background var(--transition-smooth);
+        }
+
+        .nav-present .logo {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+        }
+
+        .nav-present .logo span {
+            color: var(--text-primary);
+            font-weight: 400;
+            margin-left: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-bottom: none;
+            transition: color var(--transition-smooth);
+            padding: 0.3rem 0;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-gold);
+        }
+
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .hamburger-menu span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: var(--transition-smooth);
+        }
+
+        .tel-link {
+            font-weight: 600;
+            color: var(--accent-gold-light) !important;
+            font-size: 0.95rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            padding: 5rem 2rem 4rem;
+            text-align: center;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-section .badge {
+            display: inline-block;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            border: 1px solid var(--border-subtle);
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+            background: rgba(200, 164, 92, 0.05);
+        }
+
+        .hero-section h1 {
+            margin-bottom: 1rem;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Content Section */
+        .content-section {
+            position: relative;
+            padding: 3rem 2rem 4rem;
+        }
+
+        .content-section .container {
+            position: relative;
+            z-index: 1;
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        /* Comparison Cards */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+
+        .comparison-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-muted);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            transition: all var(--transition-smooth);
+            position: relative;
+            box-shadow: var(--shadow-card);
+        }
+
+        .comparison-card:hover {
+            border-color: var(--border-subtle);
+            box-shadow: var(--shadow-gold), var(--shadow-card);
+            transform: translateY(-3px);
+        }
+
+        .comparison-card .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .comparison-card h4 {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            margin-bottom: 0.6rem;
+            color: var(--accent-gold-light);
+        }
+
+        .comparison-card .card-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border: 1px solid var(--border-muted);
+            padding: 0.2rem 0.7rem;
+            border-radius: 50px;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-card .highlight {
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        /* Table style comparison */
+        .compare-table-wrap {
+            overflow-x: auto;
+            margin: 2.5rem 0;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-muted);
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            min-width: 650px;
+        }
+
+        .compare-table thead {
+            background: var(--bg-secondary);
+        }
+
+        .compare-table th {
+            text-align: left;
+            padding: 1rem 1.2rem;
+            font-family: var(--font-serif);
+            font-weight: 600;
+            color: var(--accent-gold-light);
+            border-bottom: 2px solid var(--border-subtle);
+            font-size: 0.95rem;
+            letter-spacing: -0.01em;
+        }
+
+        .compare-table td {
+            padding: 0.9rem 1.2rem;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        .compare-table tbody tr:hover {
+            background: rgba(200, 164, 92, 0.03);
+        }
+
+        .compare-table .check {
+            color: #7ebf7e;
+            font-weight: 600;
+        }
+
+        .compare-table .partial {
+            color: #e0c87c;
+            font-weight: 500;
+        }
+
+        .compare-table .cross {
+            color: #bf6b6b;
+            font-weight: 500;
+        }
+
+        /* Tip Cards */
+        .tip-cards {
+            display: flex;
+            flex
+</body>
+</html>
